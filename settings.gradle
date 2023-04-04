@@ -16,3 +16,5 @@ rootProject.name = "ExampleBoxJava"
 include ':app'
 include ':intent'
 include ':list'
+include ':navigation'
+include ':calculator'
