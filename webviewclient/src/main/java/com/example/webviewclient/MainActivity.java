@@ -1,25 +1,36 @@
-package com.example.webchromeclinet;
+package com.example.webviewclient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+
+import java.net.URI;
+import java.net.URL;
 
 public class MainActivity extends Activity {
     public WebView webView;
     private Context context;
-
+    private boolean bCmdProgress = false;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
         webView = (WebView) findViewById(R.id.webView);
+        progressBar = findViewById(R.id.progressBar);
         WebSettings ws = webView.getSettings();
         ws.setJavaScriptEnabled(true);
         ws.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -54,5 +65,36 @@ public class MainActivity extends Activity {
                     .setCancelable(false).show();
             return true;
         }
+    }
+    private class MyWebViewClient extends WebViewClient {
+        private Context context;
+
+        public MyWebViewClient(Context ctx){
+            context = ctx;
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            Uri uri = Uri.parse(view.getUrl());
+            return super.shouldOverrideUrlLoading(view, request);
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        //onPageFinished 작업 해야함 스타트 밖에 없는 상황
+//        @Override
+//        public void onPageFinished(WebView view, String url) {
+//            super.onPageFinished(view, url);
+//            try{
+//
+//            }catch(){
+//
+//            }
+//            progressBar.setVisibility(View.GONE);
+//        }
     }
 }
