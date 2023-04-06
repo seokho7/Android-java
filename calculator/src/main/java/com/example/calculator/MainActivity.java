@@ -3,6 +3,7 @@ package com.example.calculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -41,7 +42,12 @@ public class MainActivity extends AppCompatActivity {
                 resultText.append("1");
             }
         }else{
-
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        
+        return super.onTouchEvent(event);
     }
 }
