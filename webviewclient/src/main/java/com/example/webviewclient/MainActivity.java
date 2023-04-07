@@ -11,6 +11,7 @@ import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -36,6 +37,7 @@ public class MainActivity extends Activity {
         ws.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.setNetworkAvailable(true);
         webView.setWebChromeClient(new ChromeClient(this));
+        webView.setWebViewClient(new MyWebViewClient(this));
 //        String url = "https://www.naver.com";
         String url = "file:///android_asset/index.html";
         webView.loadUrl(url);
@@ -82,19 +84,34 @@ public class MainActivity extends Activity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+
             progressBar.setVisibility(View.VISIBLE);
         }
 
         //onPageFinished 작업 해야함 스타트 밖에 없는 상황
-//        @Override
-//        public void onPageFinished(WebView view, String url) {
-//            super.onPageFinished(view, url);
-//            try{
-//
-//            }catch(){
-//
-//            }
-//            progressBar.setVisibility(View.GONE);
-//        }
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            try{
+                Thread.sleep(3000);
+            }catch(Exception ex){}
+            progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            super.onReceivedHttpError(view, request, errorResponse);
+            new AlertDialog.Builder(context)
+                    .setTitle("확인")
+                    .setMessage("Native Error" + errorResponse.getData().toString())
+                    .setCancelable(false)
+                    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .show();
+        }
     }
 }
